@@ -17,3 +17,4 @@ TODO
 - Improve CSS (rem, variables, redundancy)
 - Improve JS (Extract testable functions, better documenattion)
 - cypress tests
+- add aria labels

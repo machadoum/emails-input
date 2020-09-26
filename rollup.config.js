@@ -1,9 +1,13 @@
-import typescript from "rollup-plugin-typescript2";
-import pkg from "./package.json";
+import typescriptPlugin from "rollup-plugin-typescript2";
 import postcss from "rollup-plugin-postcss";
 import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
 import nested from "postcss-nested";
+import cssvariables from "postcss-css-variables";
+import typescript from "typescript";
+import functions from "postcss-functions";
+
+import pkg from "./package.json";
 
 export default {
   input: "src/index.ts",
@@ -15,11 +19,21 @@ export default {
     },
   ],
   plugins: [
-    typescript({
-      typescript: require("typescript"),
+    typescriptPlugin({
+      typescript,
     }),
     postcss({
-      plugins: [nested()],
+      plugins: [
+        nested(),
+        cssvariables(),
+        functions({
+          functions: {
+            px(value) {
+              return `${value / 16}rem`;
+            },
+          },
+        }),
+      ],
     }),
     serve(),
     livereload(),
