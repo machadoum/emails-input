@@ -1,124 +1,90 @@
+import { createTagElement, createInitialHtml } from "./dom-creation";
+import { randomEmail, removeKeysInList } from "./helper";
 import "./style.pcss";
 
 const rootClassName = "EmailsInput";
 
-const initialHtml = `
-<div class="content">
-    <span class="content__title">Share <b>Board name</b> with others</span>
-    <ul class="email-box"><li class='email-box__item'><input class='email-box__input' type="email" placeholder="add more people..."></li></ul>
-</div>
-<div class="footer">
-    <button data-add-button class="footer__add-button">
-        Add email
-    </button>
-    <button data-add-count class="footer__count-button">
-        Get emails count
-    </button>
-</div>
-`;
-
-const addNewTag = (tagList: HTMLUListElement, tagText: string, validity: boolean) => {
-  const tag = document.createElement("li");
-
-  if (!validity) {
-    tag.setAttribute("data-invalid", "");
-    tag.classList.add("tag--invalid");
-  } else {
-    tag.classList.add("tag--valid");
-  }
-
-  const tagContent = document.createElement("span");
-  tagContent.classList.add("tag__content");
-  tagContent.innerText = tagText;
-
-  tag.classList.add("tag");
-  tag.classList.add("email-box__item");
-
-  const deleteButton = document.createElement("span");
-  deleteButton.innerHTML = "&times;";
-  deleteButton.classList.add("tag__delete");
-
-  // TODO create an element to be clicked
-  deleteButton.addEventListener("click", () => {
-    tag.remove();
-  });
-
-  tag.appendChild(tagContent);
-  tag.appendChild(deleteButton);
-  tagList.insertBefore(tag, tagList.childNodes[tagList.childNodes.length - 1]);
-};
-
-const clearInput = (input: HTMLInputElement) => {
-  input.value = "";
-};
-
-// It's a very simple and silly way to generate random text.
-const randomText = () => Math.random().toString(36).substring(9);
-
-const randomEmail = () => `${randomText()}@mail.com`;
+const ACTION_KEY_LIST = ["Enter", ",", ";", " "];
 
 const EmailsInput = (node: HTMLElement) => {
   // ---------- SETUP HTML INITIAL STATE ----------
-
-  // Using innerHTML to save time. Even though it ins't safe or fast.
   node.classList.add(rootClassName);
-  node.innerHTML = initialHtml;
+  node.innerHTML = createInitialHtml(); // Using innerHTML to save time. Even though it ins't safe or fast.
 
   // ---------- QUERY SELECTORS  ----------
+  const input = node.querySelector<HTMLInputElement>("input[data-el-input]")!;
+  const tagList = node.querySelector<HTMLUListElement>("ul[data-el-box]")!;
+  const addButton = node.querySelector<HTMLButtonElement>("button[data-add-button]")!;
+  const countButton = node.querySelector<HTMLButtonElement>("button[data-add-count]")!;
 
-  const input = node.querySelector("input")!;
-  const tagList = node.querySelector("ul")!;
-  const addButton = node.querySelector("button[data-add-button]")!;
-  const countButton = node.querySelector("button[data-add-count]")!;
+  // ---------- DOM MANIPULATION ----------
+  const addNewTagToList = (tag: HTMLLIElement) => {
+    tagList.insertBefore(tag, tagList.childNodes[tagList.childNodes.length - 1]);
+  };
 
-  // ---------- ATTACH EVENT LISTENER ----------
+  const clearInput = () => {
+    input.value = "";
+  };
 
-  input.addEventListener("paste", (event: ClipboardEvent) => {
+  const setInput = (value: string) => {
+    input.value = value;
+  };
+
+  const getAllValidEmails = () => tagList.querySelectorAll("li[data-valid]");
+
+  // ---------- EVENT LISTENER INITIALIZATION ----------
+  const onPaste = (event: ClipboardEvent) => {
     const pastedText = event.clipboardData!.getData("text");
     pastedText
       ?.trim()
       .split(",")
       .forEach(text => {
         if (text !== "") {
-          input.value = text;
-          addNewTag(tagList, text, input.validity.valid);
+          // Add email by email in order to use HTML5 email validation
+          setInput(text);
+          addNewTagToList(createTagElement(text, input.validity.valid));
         }
       });
 
-    clearInput(input);
+    clearInput();
     event.preventDefault();
-  });
-
-  input.addEventListener("keyup", (event: KeyboardEvent) => {
-    const cleanValue = input.value.replace(/[,]/g, "");
-
-    if (["Enter", ","].includes(event.key)) {
-      if (cleanValue !== "") {
-        addNewTag(tagList, cleanValue, input.validity.valid);
-      }
-      clearInput(input);
-    }
-  });
-
-  const addTagAndClearInput = (tagText: string) => {
-    addNewTag(tagList, tagText, input.validity.valid);
-    clearInput(input);
   };
 
-  input.addEventListener("focusout", () => input.value !== "" && addTagAndClearInput(input.value));
+  const onKeyUp = (event: KeyboardEvent) => {
+    if (ACTION_KEY_LIST.includes(event.key)) {
+      const cleanValue = removeKeysInList(input.value, ACTION_KEY_LIST);
 
-  addButton.addEventListener("click", () => {
-    addTagAndClearInput(randomEmail());
-  });
+      if (cleanValue !== "") {
+        setInput(cleanValue); // Update the input value to use HTML5 validation API
+        addNewTagToList(createTagElement(cleanValue, input.validity.valid));
+      }
+      clearInput();
+    }
+  };
 
-  countButton.addEventListener("click", () => {
-    const invalidTags = [...tagList.children].filter(
-      tag => (tag as HTMLLIElement).getAttribute("data-invalid") === null
-    );
+  const onFocusOut = () => {
+    if (input.value !== "") {
+      addNewTagToList(createTagElement(input.value, input.validity.valid));
+      clearInput();
+    }
+  };
 
+  const onClickAdd = () => {
+    addNewTagToList(createTagElement(randomEmail(), true));
+    clearInput();
+  };
+
+  const onClickCount = () => {
     // eslint-disable-next-line no-alert
-    alert(invalidTags.length - 1); // Subtract one for the input field
-  });
+    alert(getAllValidEmails().length); // Subtract one for the input field
+  };
+
+  // ---------- ATTACH EVENT LISTENER ----------
+  input.addEventListener("paste", onPaste);
+  input.addEventListener("keyup", onKeyUp);
+  input.addEventListener("focusout", onFocusOut);
+  addButton.addEventListener("click", onClickAdd);
+  countButton.addEventListener("click", onClickCount);
 };
 
 export default EmailsInput;
