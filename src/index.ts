@@ -1,17 +1,17 @@
-import "./style.css";
+import "./style.pcss";
 
 const rootClassName = "EmailsInput";
 
 const initialHtml = `
-<div>
-    <span>Share <b>Board Name</b> with others</span>
-    <ul><li><input type="email" placeholder="add more people..."></li></ul>
+<div class="Content">
+    <span class="Content__Title">Share <b>Board name</b> with others</span>
+    <ul class="EmailBox"><li class='EmailBox__item'><input class='EmailBox__input' type="email" placeholder="add more people..."></li></ul>
 </div>
-<div>
-    <button data-add-button>
+<div class="ActionBar">
+    <button data-add-button class="AddButton">
         Add email
     </button>
-    <button data-add-count>
+    <button data-add-count class="CountButton">
         Get emails count
     </button>
 </div>
@@ -22,21 +22,33 @@ const addNewTag = (
   tagText: string,
   validity: boolean
 ) => {
-  const newTag = document.createElement("li");
-  // TODO create an element to be clicked
-  newTag.addEventListener("click", () => {
-    newTag.remove();
-  });
+  const tag = document.createElement("li");
+
   if (!validity) {
-    newTag.setAttribute("data-invalid", "");
-    newTag.classList.add("invalid");
+    tag.setAttribute("data-invalid", "");
+    tag.classList.add("Tag--invalid");
+  } else {
+    tag.classList.add("Tag--valid");
   }
 
-  newTag.innerText = tagText;
-  tagList.insertBefore(
-    newTag,
-    tagList.childNodes[tagList.childNodes.length - 1]
-  );
+  tag.innerText = tagText;
+
+  tag.classList.add("Tag");
+  tag.classList.add("EmailBox__item");
+
+  const deleteButton = document.createElement("svg");
+  deleteButton.innerHTML = `<svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M8 0.8L7.2 0L4 3.2L0.8 0L0 0.8L3.2 4L0 7.2L0.8 8L4 4.8L7.2 8L8 7.2L4.8 4L8 0.8Z" fill="#050038"/>
+  </svg>`;
+  deleteButton.classList.add("Tag__delete");
+
+  // TODO create an element to be clicked
+  deleteButton.addEventListener("click", () => {
+    tag.remove();
+  });
+
+  tag.appendChild(deleteButton);
+  tagList.insertBefore(tag, tagList.childNodes[tagList.childNodes.length - 1]);
 };
 
 const clearInput = (input: HTMLInputElement) => {
@@ -44,7 +56,7 @@ const clearInput = (input: HTMLInputElement) => {
 };
 
 // It's a very simple and silly way to generate random text.
-const randomText = () => Math.random().toString(36).substring(7);
+const randomText = () => Math.random().toString(36).substring(9);
 
 const randomEmail = () => `${randomText()}@${randomText()}.com`;
 
