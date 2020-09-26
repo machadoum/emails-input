@@ -58,7 +58,7 @@ const clearInput = (input: HTMLInputElement) => {
 // It's a very simple and silly way to generate random text.
 const randomText = () => Math.random().toString(36).substring(9);
 
-const randomEmail = () => `${randomText()}@${randomText()}.com`;
+const randomEmail = () => `${randomText()}@mail.com`;
 
 const EmailsInput = (node: HTMLElement) => {
   // ---------- SETUP HTML INITIAL STATE ----------
