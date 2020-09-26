@@ -17,11 +17,7 @@ const initialHtml = `
 </div>
 `;
 
-const addNewTag = (
-  tagList: HTMLUListElement,
-  tagText: string,
-  validity: boolean
-) => {
+const addNewTag = (tagList: HTMLUListElement, tagText: string, validity: boolean) => {
   const tag = document.createElement("li");
 
   if (!validity) {
@@ -81,7 +77,7 @@ const EmailsInput = (node: HTMLElement) => {
     pastedText
       ?.trim()
       .split(",")
-      .forEach((text) => {
+      .forEach(text => {
         if (text != "") {
           input.value = text;
           addNewTag(tagList, text, input.validity.valid);
@@ -108,10 +104,7 @@ const EmailsInput = (node: HTMLElement) => {
     clearInput(input);
   };
 
-  input.addEventListener(
-    "focusout",
-    () => input.value != "" && addTagAndClearInput(input.value)
-  );
+  input.addEventListener("focusout", () => input.value != "" && addTagAndClearInput(input.value));
 
   addButton.addEventListener("click", () => {
     addTagAndClearInput(randomEmail());
@@ -119,7 +112,7 @@ const EmailsInput = (node: HTMLElement) => {
 
   countButton.addEventListener("click", () => {
     const invalidTags = [...tagList.children].filter(
-      (tag) => (tag as HTMLLIElement).getAttribute("data-invalid") === null
+      tag => (tag as HTMLLIElement).getAttribute("data-invalid") === null
     );
 
     alert(invalidTags.length - 1); // Subtract one for the input field
