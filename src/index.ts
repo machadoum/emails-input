@@ -18,10 +18,6 @@ const EmailsInput = (node: HTMLElement) => {
   const countButton = node.querySelector<HTMLButtonElement>("button[data-add-count]")!;
 
   // ---------- DOM MANIPULATION ----------
-  const addNewTagToList = (tag: HTMLLIElement) => {
-    tagList.insertBefore(tag, tagList.childNodes[tagList.childNodes.length - 1]);
-  };
-
   const clearInput = () => {
     input.value = "";
   };
@@ -31,6 +27,16 @@ const EmailsInput = (node: HTMLElement) => {
   };
 
   const getAllValidEmails = () => tagList.querySelectorAll("li[data-valid]");
+
+  const addNewTagToList = (tag: HTMLLIElement) => {
+    const alreadyExistis = [...getAllValidEmails()].find(
+      (el: Element) => el.textContent === tag.textContent
+    );
+
+    if (!alreadyExistis) {
+      tagList.insertBefore(tag, tagList.childNodes[tagList.childNodes.length - 1]);
+    }
+  };
 
   // ---------- EVENT LISTENER INITIALIZATION ----------
   const onPaste = (event: ClipboardEvent) => {
