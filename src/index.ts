@@ -73,12 +73,12 @@ const EmailsInput = (node: HTMLElement) => {
   // ---------- ATTACH EVENT LISTENER ----------
 
   input.addEventListener("paste", (event: ClipboardEvent) => {
-    let pastedText = event.clipboardData!.getData("text");
+    const pastedText = event.clipboardData!.getData("text");
     pastedText
       ?.trim()
       .split(",")
       .forEach(text => {
-        if (text != "") {
+        if (text !== "") {
           input.value = text;
           addNewTag(tagList, text, input.validity.valid);
         }
@@ -92,7 +92,7 @@ const EmailsInput = (node: HTMLElement) => {
     const cleanValue = input.value.replace(/[,]/g, "");
 
     if (["Enter", ","].includes(event.key)) {
-      if (cleanValue != "") {
+      if (cleanValue !== "") {
         addNewTag(tagList, cleanValue, input.validity.valid);
       }
       clearInput(input);
@@ -104,7 +104,7 @@ const EmailsInput = (node: HTMLElement) => {
     clearInput(input);
   };
 
-  input.addEventListener("focusout", () => input.value != "" && addTagAndClearInput(input.value));
+  input.addEventListener("focusout", () => input.value !== "" && addTagAndClearInput(input.value));
 
   addButton.addEventListener("click", () => {
     addTagAndClearInput(randomEmail());
@@ -115,6 +115,7 @@ const EmailsInput = (node: HTMLElement) => {
       tag => (tag as HTMLLIElement).getAttribute("data-invalid") === null
     );
 
+    // eslint-disable-next-line no-alert
     alert(invalidTags.length - 1); // Subtract one for the input field
   });
 };
