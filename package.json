@@ -15,7 +15,8 @@
     "build": "rollup -c",
     "watch": "rollup -cw",
     "prettier": "prettier --write src",
-    "lint": "eslint '*/**/*.{ts,pcss}' --quiet --fix"
+    "lint": "eslint '*/**/*.ts' --fix; stylelint '**/*.pcss' --fix",
+    "checkup": "yarn prettier && prettier lint"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.2.0",
@@ -36,6 +37,10 @@
     "rollup-plugin-postcss": "^3.1.8",
     "rollup-plugin-serve": "^1.0.4",
     "rollup-plugin-typescript2": "^0.27.2",
+    "stylelint": "^13.7.2",
+    "stylelint-config-rational-order": "^0.1.2",
+    "stylelint-config-recommended": "^3.0.0",
+    "stylelint-order": "^4.1.0",
     "typescript": "^4.0.3"
   }
 }

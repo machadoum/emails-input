@@ -17,6 +17,3 @@ TODO
 - Improve CSS (rem, variables, redundancy)
 - Improve JS (Extract testable functions, better documenattion)
 - cypress tests
-- prettier
-- eslint
-- css linter
