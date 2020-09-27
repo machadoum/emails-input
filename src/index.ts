@@ -39,6 +39,11 @@ const EmailsInput = (node: HTMLElement) => {
   };
 
   // ---------- EVENT LISTENER INITIALIZATION ----------
+  const onDeleteTagClick = (tag: HTMLLIElement) => {
+    tag.remove();
+    input.focus();
+  };
+
   const onPaste = (event: ClipboardEvent) => {
     const pastedText = event.clipboardData!.getData("text");
     pastedText
@@ -48,7 +53,7 @@ const EmailsInput = (node: HTMLElement) => {
         if (text !== "") {
           // Add email by email in order to use HTML5 email validation
           setInput(text);
-          addNewTagToList(createTagElement(text, input.validity.valid));
+          addNewTagToList(createTagElement(text, input.validity.valid, onDeleteTagClick));
         }
       });
 
@@ -62,7 +67,7 @@ const EmailsInput = (node: HTMLElement) => {
 
       if (cleanValue !== "") {
         setInput(cleanValue); // Update the input value to use HTML5 validation API
-        addNewTagToList(createTagElement(cleanValue, input.validity.valid));
+        addNewTagToList(createTagElement(cleanValue, input.validity.valid, onDeleteTagClick));
       }
       clearInput();
     }
@@ -70,13 +75,13 @@ const EmailsInput = (node: HTMLElement) => {
 
   const onFocusOut = () => {
     if (input.value !== "") {
-      addNewTagToList(createTagElement(input.value, input.validity.valid));
+      addNewTagToList(createTagElement(input.value, input.validity.valid, onDeleteTagClick));
       clearInput();
     }
   };
 
   const onClickAdd = () => {
-    addNewTagToList(createTagElement(randomEmail(), true));
+    addNewTagToList(createTagElement(randomEmail(), true, onDeleteTagClick));
     clearInput();
   };
 
