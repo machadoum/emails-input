@@ -6,8 +6,10 @@ import nested from "postcss-nested";
 import cssvariables from "postcss-css-variables";
 import typescript from "typescript";
 import functions from "postcss-functions";
-
+import { terser } from "rollup-plugin-terser";
 import pkg from "./package.json";
+
+const production = !process.env.ROLLUP_WATCH;
 
 export default {
   input: "src/index.ts",
@@ -35,7 +37,8 @@ export default {
         }),
       ],
     }),
-    serve(),
-    livereload(),
+    !production && serve(),
+    !production && livereload(),
+    production && terser(),
   ],
 };

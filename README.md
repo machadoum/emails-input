@@ -11,6 +11,5 @@ TODO
 - Link git repository (built version)
 - README Examples + documentation
 - Test on firefox, safari and IE 11
-- Several emails editors on the same page
 - Write tests
 - cypress tests
