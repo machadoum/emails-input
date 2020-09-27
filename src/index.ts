@@ -29,7 +29,9 @@ const EmailsInput = (node: HTMLElement) => {
   const getAllValidEmails = () => tagList.querySelectorAll("li[data-valid]");
 
   const addNewTagToList = (tag: HTMLLIElement) => {
-    const alreadyExistis = [...getAllValidEmails()].find(
+    // IE 11 hack (IE doesn't support Array.from or spreading NodeList)
+    const alreadyExistis = Array.prototype.some.call(
+      getAllValidEmails(),
       (el: Element) => el.textContent === tag.textContent
     );
 
@@ -40,12 +42,15 @@ const EmailsInput = (node: HTMLElement) => {
 
   // ---------- EVENT LISTENER INITIALIZATION ----------
   const onDeleteTagClick = (tag: HTMLLIElement) => {
-    tag.remove();
+    // IE 11 hack (IE 11 doesn't support childNode.remove)
+    tag.parentNode?.removeChild(tag);
+
     input.focus();
   };
 
   const onPaste = (event: ClipboardEvent) => {
-    const pastedText = event.clipboardData!.getData("text");
+    // @ts-ignore IE 11 hack (ClipboardEvent.clipboardData is undefined)
+    const pastedText: string = (event.clipboardData || window.clipboardData).getData("text");
     pastedText
       ?.trim()
       .split(",")
@@ -62,7 +67,8 @@ const EmailsInput = (node: HTMLElement) => {
   };
 
   const onKeyUp = (event: KeyboardEvent) => {
-    if (ACTION_KEY_LIST.includes(event.key)) {
+    // IE 11 hack (IE doesn't support Array.includes)
+    if (ACTION_KEY_LIST.indexOf(event.key) > -1) {
       const cleanValue = removeKeysInList(input.value, ACTION_KEY_LIST);
 
       if (cleanValue !== "") {

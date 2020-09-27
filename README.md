@@ -9,6 +9,5 @@ TODO
 
 - Link git repository (built version)
 - README Examples + documentation
-- Test on firefox, safari and IE 11
 - Write tests
 - cypress tests

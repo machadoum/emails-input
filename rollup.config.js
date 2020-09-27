@@ -8,6 +8,7 @@ import typescript from "typescript";
 import functions from "postcss-functions";
 import { terser } from "rollup-plugin-terser";
 import postcssImport from "postcss-import";
+import babel from "@rollup/plugin-babel";
 import pkg from "./package.json";
 
 const production = !process.env.ROLLUP_WATCH;
@@ -24,6 +25,11 @@ export default {
   plugins: [
     typescriptPlugin({
       typescript,
+    }),
+    babel({
+      babelHelpers: "bundled",
+      exclude: "node_modules/**",
+      extensions: [".js", ".ts"],
     }),
     postcss({
       minimize: production,

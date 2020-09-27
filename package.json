@@ -19,8 +19,11 @@
     "checkup": "yarn prettier && prettier lint"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.11.5",
+    "@rollup/plugin-babel": "^5.2.1",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
+    "core-js": "2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-airbnb-typescript": "^7.2.1",
@@ -46,5 +49,9 @@
     "stylelint-config-recommended": "^3.0.0",
     "stylelint-order": "^4.1.0",
     "typescript": "^4.0.3"
-  }
+  },
+  "browserslist": [
+    "last 1 versions",
+    "IE 11"
+  ]
 }
