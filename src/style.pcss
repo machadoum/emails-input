@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap");
+@import "./custom-normalize.pcss";
 
 .EmailsInput {
   --font-family: "Open Sans", sans-serif;
@@ -29,6 +30,8 @@
   }
 
   .email-box {
+    --tag-height: px(24);
+
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
@@ -41,7 +44,6 @@
     border-radius: 4px;
 
     &__item {
-      --tag-height: px(24);
       height: var(--tag-height);
       margin-top: px(4);
       overflow: hidden;
@@ -88,6 +90,7 @@
         padding: 0;
         font-size: px(17);
         font-family: var(--font-family);
+        line-height: var(--tag-height);
         vertical-align: top;
         background-color: transparent;
         border: none;

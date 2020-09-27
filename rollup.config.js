@@ -7,6 +7,7 @@ import cssvariables from "postcss-css-variables";
 import typescript from "typescript";
 import functions from "postcss-functions";
 import { terser } from "rollup-plugin-terser";
+import postcssImport from "postcss-import";
 import pkg from "./package.json";
 
 const production = !process.env.ROLLUP_WATCH;
@@ -25,9 +26,11 @@ export default {
       typescript,
     }),
     postcss({
+      minimize: production,
       plugins: [
-        nested(),
         cssvariables(),
+        postcssImport(),
+        nested(),
         functions({
           functions: {
             px(value) {

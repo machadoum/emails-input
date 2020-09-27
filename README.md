@@ -7,7 +7,6 @@ a11y -> it should be accessible with keyboard and voice over
 
 TODO
 
-- ​GitHub Pages​.
 - Link git repository (built version)
 - README Examples + documentation
 - Test on firefox, safari and IE 11
