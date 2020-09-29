@@ -11,7 +11,7 @@ const createDeleteButtonElement = (tagText: string, onDeleteClick: () => void) =
 const createTagContentElement = (tagText: string) => {
   const tagContent = document.createElement("span");
   tagContent.classList.add("tag__content");
-  tagContent.innerText = tagText;
+  tagContent.textContent = tagText;
   return tagContent;
 };
 
@@ -51,7 +51,7 @@ export const createInitialHtml = () => `
     <button data-add-button class="footer__add-button">
         Add email
     </button>
-    <button data-add-count class="footer__count-button">
+    <button data-count-button class="footer__count-button">
         Get emails count
     </button>
 </div>

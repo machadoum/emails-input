@@ -1,10 +1,11 @@
 import { createTagElement, createInitialHtml } from "./dom-creation";
-import { randomEmail, removeKeysInList } from "./helper";
+import { randomEmail, removeCharactersInList } from "./helper";
 import "./style.pcss";
 
 const rootClassName = "EmailsInput";
+const ACTION_CHARACTERS = [",", ";", " "];
 
-const ACTION_KEY_LIST = ["Enter", ",", ";", " "];
+const ACTION_KEY_LIST = ["Enter", ...ACTION_CHARACTERS];
 
 const EmailsInput = (node: HTMLElement) => {
   // ---------- SETUP HTML INITIAL STATE ----------
@@ -15,7 +16,7 @@ const EmailsInput = (node: HTMLElement) => {
   const input = node.querySelector<HTMLInputElement>("input[data-el-input]")!;
   const tagList = node.querySelector<HTMLUListElement>("ul[data-el-box]")!;
   const addButton = node.querySelector<HTMLButtonElement>("button[data-add-button]")!;
-  const countButton = node.querySelector<HTMLButtonElement>("button[data-add-count]")!;
+  const countButton = node.querySelector<HTMLButtonElement>("button[data-count-button]")!;
 
   // ---------- DOM MANIPULATION ----------
   const clearInput = () => {
@@ -54,12 +55,11 @@ const EmailsInput = (node: HTMLElement) => {
     pastedText
       ?.trim()
       .split(",")
+      .filter(text => text !== "")
       .forEach(text => {
-        if (text !== "") {
-          // Add email by email in order to use HTML5 email validation
-          setInput(text);
-          addNewTagToList(createTagElement(text, input.validity.valid, onDeleteTagClick));
-        }
+        // Add email by email in order to use HTML5 email validation
+        setInput(text);
+        addNewTagToList(createTagElement(text, input.validity.valid, onDeleteTagClick));
       });
 
     clearInput();
@@ -69,7 +69,7 @@ const EmailsInput = (node: HTMLElement) => {
   const onKeyUp = (event: KeyboardEvent) => {
     // IE 11 hack (IE doesn't support Array.includes)
     if (ACTION_KEY_LIST.indexOf(event.key) > -1) {
-      const cleanValue = removeKeysInList(input.value, ACTION_KEY_LIST);
+      const cleanValue = removeCharactersInList(input.value, ACTION_CHARACTERS);
 
       if (cleanValue !== "") {
         setInput(cleanValue); // Update the input value to use HTML5 validation API
